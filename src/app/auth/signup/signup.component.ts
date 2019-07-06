@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import { DateTime } from 'luxon';
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -8,6 +10,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class SignupComponent implements OnInit {
   signUpForm: FormGroup;
+  maxDate: Date;
 
   constructor() {}
 
@@ -19,6 +22,10 @@ export class SignupComponent implements OnInit {
         Validators.minLength(6)
       ])
     });
+
+    this.maxDate = DateTime.local()
+      .minus({ years: 10 })
+      .toJSDate();
   }
 
   hasControlError(controlName: string, errorName: string) {
