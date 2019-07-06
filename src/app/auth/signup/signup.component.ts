@@ -20,7 +20,9 @@ export class SignupComponent implements OnInit {
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(6)
-      ])
+      ]),
+      birthdate: new FormControl('', Validators.required),
+      agree: new FormControl('', Validators.required)
     });
 
     this.maxDate = DateTime.local()
