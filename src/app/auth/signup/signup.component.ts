@@ -14,8 +14,16 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     this.signUpForm = new FormGroup({
       email: new FormControl('', [Validators.email, Validators.required]),
-      password: new FormControl('', Validators.required)
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6)
+      ])
     });
+  }
+
+  hasControlError(controlName: string, errorName: string) {
+    const errorsObj = this.signUpForm.controls[controlName].errors;
+    return Boolean(errorsObj && errorsObj[errorName]);
   }
 
   onSubmit() {
