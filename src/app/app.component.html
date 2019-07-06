@@ -1,5 +1,26 @@
 <mat-sidenav-container>
-  <mat-sidenav #sidenav role="navigation">Sidenav</mat-sidenav>
+  <mat-sidenav #sidenav role="navigation">
+    <mat-list role="list">
+      <a routerLink="/signup" mat-list-item>
+        <mat-icon>face</mat-icon>
+        <span class="nav-caption">Sign Up</span>
+      </a>
+      <a routerLink="/login" mat-list-item>
+        <mat-icon>input</mat-icon>
+        <span class="nav-caption">Login</span>
+      </a>
+      <a routerLink="/training" mat-list-item>
+        <mat-icon>fitness_center</mat-icon>
+        <span class="nav-caption">Training</span>
+      </a>
+      <mat-list-item role="listitem">
+        <button mat-icon-button>
+          <mat-icon>eject</mat-icon>
+          <span class="nav-caption">Logout</span>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       <div fxHide.gt-xs>
@@ -15,6 +36,7 @@
           <li><a routerLink="/signup">Sign Up</a></li>
           <li><a routerLink="/login">Login</a></li>
           <li><a routerLink="/training">Training</a></li>
+          <li><a>Logout</a></li>
         </ul>
       </div>
     </mat-toolbar>

@@ -4,6 +4,19 @@ mat-sidenav-container {
 
 mat-sidenav {
   width: 250px;
+
+  a {
+    color: #000;
+
+    &:hover,
+    &:active {
+      color: #ccc;
+    }
+  }
+}
+
+.nav-caption {
+  padding-left: 10px;
 }
 
 a {
