@@ -1,0 +1,12 @@
+a {
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    color: #ccc;
+  }
+}
+
+.nav-caption {
+  padding-left: 10px;
+}
