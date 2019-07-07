@@ -4,33 +4,4 @@ mat-sidenav-container {
 
 mat-sidenav {
   width: 250px;
-
-  a {
-    color: #000;
-
-    &:hover,
-    &:active {
-      color: #ccc;
-    }
-  }
-}
-
-.nav-caption {
-  padding-left: 10px;
-}
-
-a {
-  text-decoration: none;
-  color: #fff;
-
-  &:hover,
-  &:active {
-    color: #ccc;
-  }
-}
-
-.navigation-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
 }
