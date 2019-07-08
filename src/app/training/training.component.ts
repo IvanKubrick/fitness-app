@@ -17,4 +17,8 @@ export class TrainingComponent implements OnInit {
   onTrainingStarted() {
     this.ongoingTraining = true;
   }
+
+  onTrainingExit() {
+    this.ongoingTraining = false;
+  }
 }
