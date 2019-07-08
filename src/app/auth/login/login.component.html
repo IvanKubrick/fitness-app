@@ -1,1 +1,41 @@
-<p>login works!</p>
+<section class="login-form">
+  <form
+    [formGroup]="loginForm"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="10px"
+    (ngSubmit)="onSubmit()"
+  >
+    <mat-form-field>
+      <input
+        formControlName="email"
+        matInput
+        type="email"
+        placeholder="Your email"
+      />
+      <mat-error *ngIf="hasControlError('email', 'required')"
+        >email should not be emty</mat-error
+      >
+      <mat-error *ngIf="hasControlError('email', 'email')"
+        >email should be valid</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field hintLabel="should be at least 6 characters long">
+      <input
+        formControlName="password"
+        matInput
+        type="password"
+        placeholder="Your password"
+      />
+      <mat-error>should be at least 6 characters long</mat-error>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+      [disabled]="!loginForm.valid"
+    >
+      Login
+    </button>
+  </form>
+</section>

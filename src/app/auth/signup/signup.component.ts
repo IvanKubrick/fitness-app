@@ -17,19 +17,7 @@ export class SignupComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.signUpForm = new FormGroup({
-      email: new FormControl('', [Validators.email, Validators.required]),
-      password: new FormControl('', [
-        Validators.required,
-        Validators.minLength(6)
-      ]),
-      birthdate: new FormControl('', Validators.required),
-      agree: new FormControl('', Validators.required)
-    });
-
-    this.maxDate = DateTime.local()
-      .minus({ years: 10 })
-      .toJSDate();
+    this.initForm();
   }
 
   hasControlError(controlName: string, errorName: string) {
@@ -43,5 +31,21 @@ export class SignupComponent implements OnInit {
       email: this.signUpForm.value.email,
       password: this.signUpForm.value.password
     });
+  }
+
+  private initForm() {
+    this.signUpForm = new FormGroup({
+      email: new FormControl('', [Validators.email, Validators.required]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6)
+      ]),
+      birthdate: new FormControl('', Validators.required),
+      agree: new FormControl('', Validators.required)
+    });
+
+    this.maxDate = DateTime.local()
+      .minus({ years: 10 })
+      .toJSDate();
   }
 }
