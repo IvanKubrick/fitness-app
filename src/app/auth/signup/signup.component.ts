@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { DateTime } from 'luxon';
 
+import { AuthService } from '../auth.service';
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -12,7 +14,7 @@ export class SignupComponent implements OnInit {
   signUpForm: FormGroup;
   maxDate: Date;
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.signUpForm = new FormGroup({
@@ -37,5 +39,9 @@ export class SignupComponent implements OnInit {
 
   onSubmit() {
     console.log(this.signUpForm);
+    this.authService.registerUser({
+      email: this.signUpForm.value.email,
+      password: this.signUpForm.value.password
+    });
   }
 }
