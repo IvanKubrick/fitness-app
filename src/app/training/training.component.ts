@@ -10,15 +10,15 @@ export class TrainingComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.ongoingTraining = false;
   }
 
-  onTrainingStarted() {
+  onTrainingStarted(): void {
     this.ongoingTraining = true;
   }
 
-  onTrainingExit() {
+  onTrainingExit(): void {
     this.ongoingTraining = false;
   }
 }

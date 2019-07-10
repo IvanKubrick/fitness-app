@@ -16,13 +16,13 @@ export class CurrentTrainingComponent implements OnInit {
 
   constructor(private dialog: MatDialog) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.progress = 0;
 
     this.startOrResumeTimer();
   }
 
-  onStop() {
+  onStop(): void {
     clearInterval(this.timer);
     const dialogRef: MatDialogRef<any> = this.dialog.open(
       StopTrainingComponent,
@@ -39,7 +39,7 @@ export class CurrentTrainingComponent implements OnInit {
       }
     });
   }
-  private startOrResumeTimer() {
+  private startOrResumeTimer(): void {
     this.timer = setInterval(() => {
       this.progress += 5;
 

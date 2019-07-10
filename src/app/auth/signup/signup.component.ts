@@ -16,16 +16,16 @@ export class SignupComponent implements OnInit {
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initForm();
   }
 
-  hasControlError(controlName: string, errorName: string) {
+  hasControlError(controlName: string, errorName: string): boolean {
     const errorsObj = this.signUpForm.controls[controlName].errors;
     return Boolean(errorsObj && errorsObj[errorName]);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     console.log(this.signUpForm);
     this.authService.registerUser({
       email: this.signUpForm.value.email,
@@ -33,7 +33,7 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  private initForm() {
+  private initForm(): void {
     this.signUpForm = new FormGroup({
       email: new FormControl('', [Validators.email, Validators.required]),
       password: new FormControl('', [

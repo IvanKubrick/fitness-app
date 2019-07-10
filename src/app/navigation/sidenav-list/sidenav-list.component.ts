@@ -1,4 +1,10 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  OnDestroy
+} from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
@@ -9,8 +15,8 @@ import { AuthService } from './../../auth/auth.service';
   templateUrl: './sidenav-list.component.html',
   styleUrls: ['./sidenav-list.component.scss']
 })
-export class SidenavListComponent implements OnInit {
-  isAuth = false;
+export class SidenavListComponent implements OnInit, OnDestroy {
+  isAuth: boolean = false;
 
   @Output() closeSidenav: EventEmitter<void> = new EventEmitter();
 
@@ -18,24 +24,24 @@ export class SidenavListComponent implements OnInit {
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscribeToAuthChange();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.authSubscription.unsubscribe();
   }
 
-  onLinkClick() {
+  onLinkClick(): void {
     this.closeSidenav.emit();
   }
 
-  onLogout() {
+  onLogout(): void {
     this.closeSidenav.emit();
     this.authService.logout();
   }
 
-  private subscribeToAuthChange() {
+  private subscribeToAuthChange(): void {
     this.authSubscription = this.authService.authChange.subscribe(
       (authenticated: boolean) => {
         this.isAuth = authenticated;
