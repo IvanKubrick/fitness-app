@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Subscription } from 'rxjs';
+import { TrainingService } from './training.service';
+import { Exercise } from './exercise.model';
+
 @Component({
   selector: 'app-training',
   templateUrl: './training.component.html',
@@ -8,10 +12,17 @@ import { Component, OnInit } from '@angular/core';
 export class TrainingComponent implements OnInit {
   ongoingTraining: boolean;
 
-  constructor() {}
+  exerciseSubscription: Subscription;
+
+  constructor(private trainingService: TrainingService) {}
 
   ngOnInit(): void {
     this.ongoingTraining = false;
+
+    this.subscribeToTrainingChange();
+  }
+  ngDestroy(): void {
+    this.exerciseSubscription.unsubscribe();
   }
 
   onTrainingStarted(): void {
@@ -20,5 +31,13 @@ export class TrainingComponent implements OnInit {
 
   onTrainingExit(): void {
     this.ongoingTraining = false;
+  }
+
+  private subscribeToTrainingChange(): void {
+    this.exerciseSubscription = this.trainingService.exerciseChanged.subscribe(
+      (exercise: Exercise) => {
+        this.ongoingTraining = !!exercise;
+      }
+    );
   }
 }
