@@ -14,6 +14,7 @@ export class TrainingService {
     { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
   ];
   private runningExercise: Exercise;
+  private exercises: Exercise[] = [];
 
   exerciseChanged: Subject<Exercise> = new Subject<Exercise>();
 
@@ -32,5 +33,26 @@ export class TrainingService {
 
     this.runningExercise = selectedExercise;
     this.exerciseChanged.next({ ...selectedExercise });
+  }
+
+  completeExercixe(): void {
+    this.exercises.push({
+      ...this.runningExercise,
+      date: new Date(),
+      state: 'completed'
+    });
+    this.runningExercise = null;
+    this.exerciseChanged.next(null);
+  }
+  cancelExercixe(progress: number): void {
+    this.exercises.push({
+      ...this.runningExercise,
+      duration: this.runningExercise.duration * (progress / 100),
+      calories: this.runningExercise.calories * (progress / 100),
+      date: new Date(),
+      state: 'completed'
+    });
+    this.runningExercise = null;
+    this.exerciseChanged.next(null);
   }
 }
