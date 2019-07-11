@@ -13,13 +13,16 @@ export class TrainingService {
     { id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 20 },
     { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
   ];
-
   private runningExercise: Exercise;
 
   exerciseChanged: Subject<Exercise> = new Subject<Exercise>();
 
   getAvailableExercises(): Exercise[] {
     return [...this.availableExercisses];
+  }
+
+  getRunningExercise(): Exercise {
+    return { ...this.runningExercise };
   }
 
   startExercise(exerciseId: string): void {
