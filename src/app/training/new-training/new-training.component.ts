@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 import { TrainingService } from '../training.service';
@@ -7,7 +7,8 @@ import { Exercise } from '../exercise.model';
 @Component({
   selector: 'app-new-training',
   templateUrl: './new-training.component.html',
-  styleUrls: ['./new-training.component.scss']
+  styleUrls: ['./new-training.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewTrainingComponent implements OnInit {
   exercises: Exercise[] = [];

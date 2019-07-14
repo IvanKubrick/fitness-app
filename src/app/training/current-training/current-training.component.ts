@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { StopTrainingComponent } from '../current-training/stop-training/stop-training.component';
@@ -7,7 +12,8 @@ import { TrainingService } from '../training.service';
 @Component({
   selector: 'app-current-training',
   templateUrl: './current-training.component.html',
-  styleUrls: ['./current-training.component.scss']
+  styleUrls: ['./current-training.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CurrentTrainingComponent implements OnInit {
   progress: number;
@@ -15,7 +21,8 @@ export class CurrentTrainingComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private trainingService: TrainingService
+    private trainingService: TrainingService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +53,7 @@ export class CurrentTrainingComponent implements OnInit {
       (this.trainingService.getRunningExercise().duration / 100) * 1000;
     this.timer = setInterval(() => {
       this.progress += 1;
+      this.changeDetectorRef.markForCheck();
 
       if (this.progress >= 100) {
         this.trainingService.completeExercixe();

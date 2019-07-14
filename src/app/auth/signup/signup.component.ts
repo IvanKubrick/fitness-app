@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { DateTime } from 'luxon';
@@ -8,7 +8,8 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupComponent implements OnInit {
   signUpForm: FormGroup;
