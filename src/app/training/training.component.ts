@@ -34,14 +34,6 @@ export class TrainingComponent implements OnInit {
     this.exerciseSubscription.unsubscribe();
   }
 
-  onTrainingStarted(): void {
-    this.ongoingTraining = true;
-  }
-
-  onTrainingExit(): void {
-    this.ongoingTraining = false;
-  }
-
   private subscribeToTrainingChange(): void {
     this.exerciseSubscription = this.trainingService.exerciseChanged.subscribe(
       (exercise: Exercise) => {
