@@ -1,4 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+
+import { Exercise } from '../exercise.model';
+import { TrainingService } from '../training.service';
 
 @Component({
   selector: 'app-past-trainings',
@@ -7,7 +11,12 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PastTrainingsComponent implements OnInit {
-  constructor() {}
+  displayedColumns = ['date', 'name', 'duration', 'calories', 'state'];
+  dataSource = new MatTableDataSource<Exercise>();
 
-  ngOnInit(): void {}
+  constructor(private trainingService: TrainingService) {}
+
+  ngOnInit(): void {
+    this.dataSource.data = this.trainingService.getCompletedAndCancelledExercises();
+  }
 }

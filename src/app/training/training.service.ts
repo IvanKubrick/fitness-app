@@ -44,6 +44,7 @@ export class TrainingService {
     this.runningExercise = null;
     this.exerciseChanged.next(null);
   }
+
   cancelExercixe(progress: number): void {
     this.exercises.push({
       ...this.runningExercise,
@@ -54,5 +55,9 @@ export class TrainingService {
     });
     this.runningExercise = null;
     this.exerciseChanged.next(null);
+  }
+
+  getCompletedAndCancelledExercises(): Exercise[] {
+    return [...this.exercises];
   }
 }
