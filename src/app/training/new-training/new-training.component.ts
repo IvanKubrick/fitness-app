@@ -1,5 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy
+} from '@angular/core';
 import { NgModel } from '@angular/forms';
+
+import { Subscription } from 'rxjs';
 
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
@@ -10,13 +17,25 @@ import { Exercise } from '../exercise.model';
   styleUrls: ['./new-training.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewTrainingComponent implements OnInit {
-  exercises: Exercise[] = [];
+export class NewTrainingComponent implements OnInit, OnDestroy {
+  exercises: Exercise[];
+
+  private subscription: Subscription;
 
   constructor(private trainingService: TrainingService) {}
 
   ngOnInit(): void {
-    this.exercises = this.trainingService.getAvailableExercises();
+    this.subscription = this.trainingService.exercisesChanged.subscribe(
+      (exercises: Exercise[]) => {
+        this.exercises = exercises;
+      }
+    );
+
+    this.trainingService.fetchAvailableExercises();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onStartTraining(form: NgModel): void {

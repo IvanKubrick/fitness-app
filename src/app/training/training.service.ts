@@ -1,25 +1,42 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+
+import { Subject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Exercise } from './exercise.model';
-import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingService {
-  private availableExercisses: Exercise[] = [
-    { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
-    { id: 'touch-toes', name: 'Touch toes', duration: 180, calories: 30 },
-    { id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 20 },
-    { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
-  ];
-  private runningExercise: Exercise;
-  private exercises: Exercise[] = [];
-
   exerciseChanged: Subject<Exercise> = new Subject<Exercise>();
+  exercisesChanged: Subject<Exercise[]> = new Subject<Exercise[]>();
+  finishedExercisesChanged: Subject<Exercise[]> = new Subject<Exercise[]>();
 
-  getAvailableExercises(): Exercise[] {
-    return [...this.availableExercisses];
+  private availableExercises: Exercise[] = [];
+  private runningExercise: Exercise;
+
+  constructor(private db: AngularFirestore) {}
+
+  fetchAvailableExercises(): void {
+    this.db
+      .collection('availableExercises')
+      .snapshotChanges()
+      .pipe(
+        map((docArray: any[]) =>
+          docArray.map((doc: any) => {
+            return {
+              id: doc.payload.doc.id,
+              ...doc.payload.doc.data()
+            };
+          })
+        )
+      )
+      .subscribe((exercises: Exercise[]) => {
+        this.availableExercises = exercises;
+        this.exercisesChanged.next([...this.availableExercises]);
+      });
   }
 
   getRunningExercise(): Exercise {
@@ -27,7 +44,7 @@ export class TrainingService {
   }
 
   startExercise(exerciseId: string): void {
-    const selectedExercise: Exercise = this.availableExercisses.find(
+    const selectedExercise: Exercise = this.availableExercises.find(
       (exercise: Exercise) => exercise.id === exerciseId
     );
 
@@ -36,7 +53,7 @@ export class TrainingService {
   }
 
   completeExercixe(): void {
-    this.exercises.push({
+    this.addDatatoDatabase({
       ...this.runningExercise,
       date: new Date(),
       state: 'completed'
@@ -46,7 +63,7 @@ export class TrainingService {
   }
 
   cancelExercixe(progress: number): void {
-    this.exercises.push({
+    this.addDatatoDatabase({
       ...this.runningExercise,
       duration: (this.runningExercise.duration * progress) / 100,
       calories: (this.runningExercise.calories * progress) / 100,
@@ -57,7 +74,16 @@ export class TrainingService {
     this.exerciseChanged.next(null);
   }
 
-  getCompletedAndCancelledExercises(): Exercise[] {
-    return [...this.exercises];
+  fetchCompletedAndCancelledExercises(): void {
+    this.db
+      .collection('finishedExercises')
+      .valueChanges()
+      .subscribe((exercises: Exercise[]) => {
+        this.finishedExercisesChanged.next(exercises);
+      });
+  }
+
+  private addDatatoDatabase(execise: Exercise): void {
+    this.db.collection('finishedExercises').add(execise);
   }
 }
