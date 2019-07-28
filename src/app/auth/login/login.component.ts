@@ -1,6 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+
+import { Subscription } from 'rxjs';
+
 import { AuthService } from '../auth.service';
+import { UIService } from './../../shared/ui.service';
 
 @Component({
   selector: 'app-login',
@@ -8,13 +18,31 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
+  isLoading: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  private loadingSubscription: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private uiService: UIService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
+
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+      (value: boolean) => {
+        this.isLoading = value;
+        this.changeDetectorRef.markForCheck();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.loadingSubscription.unsubscribe();
   }
 
   hasControlError(controlName: string, errorName: string): boolean {

@@ -1,9 +1,17 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 
 import { AuthService } from '../auth.service';
+import { UIService } from '../../shared/ui.service';
 
 @Component({
   selector: 'app-signup',
@@ -11,14 +19,32 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./signup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
   signUpForm: FormGroup;
   maxDate: Date;
+  isLoading: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  private loadingSubscription: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private uiService: UIService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
+
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+      (value: boolean) => {
+        this.isLoading = value;
+        this.changeDetectorRef.markForCheck();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.loadingSubscription.unsubscribe();
   }
 
   hasControlError(controlName: string, errorName: string): boolean {
