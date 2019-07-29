@@ -2,7 +2,8 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
@@ -10,6 +11,7 @@ import { Subscription } from 'rxjs';
 
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
+import { UIService } from './../../shared/ui.service';
 
 @Component({
   selector: 'app-new-training',
@@ -19,10 +21,15 @@ import { Exercise } from '../exercise.model';
 })
 export class NewTrainingComponent implements OnInit, OnDestroy {
   exercises: Exercise[];
+  isLoading: boolean = true;
 
   private subscription: Subscription;
 
-  constructor(private trainingService: TrainingService) {}
+  constructor(
+    private trainingService: TrainingService,
+    private uiService: UIService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.subscription = this.trainingService.exercisesChanged.subscribe(
@@ -31,11 +38,22 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.trainingService.fetchAvailableExercises();
+    this.subscription.add(
+      this.uiService.loadingStateChanged.subscribe((value: boolean) => {
+        this.isLoading = value;
+        this.changeDetectorRef.markForCheck();
+      })
+    );
+
+    this.fetchExercises();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  fetchExercises(): void {
+    this.trainingService.fetchAvailableExercises();
   }
 
   onStartTraining(form: NgModel): void {
