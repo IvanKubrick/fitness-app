@@ -31,7 +31,9 @@ export class TrainingComponent implements OnInit {
     this.subscribeToTrainingChange();
   }
   ngDestroy(): void {
-    this.exerciseSubscription.unsubscribe();
+    if (this.exerciseSubscription) {
+      this.exerciseSubscription.unsubscribe();
+    }
   }
 
   private subscribeToTrainingChange(): void {
