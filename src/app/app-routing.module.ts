@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: '', component: WelcomeComponent },
   {
     path: 'training',
-    loadChildren: () => TrainingModule
+    loadChildren: () => TrainingModule,
+    canLoad: [AuthGuard]
   }
 ];
 
