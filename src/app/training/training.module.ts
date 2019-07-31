@@ -1,6 +1,6 @@
-import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 
+import { SharedModule } from './../shared/shared.module';
 import { StopTrainingComponent } from './current-training/stop-training/stop-training.component';
 import { CurrentTrainingComponent } from './current-training/current-training.component';
 import { NewTrainingComponent } from './new-training/new-training.component';

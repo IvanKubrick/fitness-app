@@ -4,8 +4,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { WelcomeComponent } from './welcome/welcome.component';
 import { AuthGuard } from './auth/auth.guad';
+import { TrainingModule } from './training/training.module';
 
-const routes: Routes = [{ path: '', component: WelcomeComponent }];
+const routes: Routes = [
+  { path: '', component: WelcomeComponent },
+  {
+    path: 'training',
+    loadChildren: () => TrainingModule
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes), BrowserAnimationsModule],
