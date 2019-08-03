@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 
 import { AuthService } from '../auth.service';
-import { UIService } from '../../shared/ui.service';
+import { UIService } from '../../shared/index';
 
 @Component({
   selector: 'app-signup',

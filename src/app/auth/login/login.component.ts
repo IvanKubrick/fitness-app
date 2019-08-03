@@ -1,16 +1,10 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { AuthService } from '../auth.service';
-import { UIService } from './../../shared/ui.service';
+import { StoreService } from './../../store/index';
 
 @Component({
   selector: 'app-login',
@@ -18,33 +12,19 @@ import { UIService } from './../../shared/ui.service';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  isLoading: boolean = false;
-
-  private loadingSubscription: Subscription;
+  isLoading$: Observable<boolean>;
 
   constructor(
     private authService: AuthService,
-    private uiService: UIService,
-    private changeDetectorRef: ChangeDetectorRef
+    private storeService: StoreService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
 
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
-      (value: boolean) => {
-        this.isLoading = value;
-        this.changeDetectorRef.markForCheck();
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
-    }
+    this.isLoading$ = this.storeService.getIsLoading();
   }
 
   hasControlError(controlName: string, errorName: string): boolean {
