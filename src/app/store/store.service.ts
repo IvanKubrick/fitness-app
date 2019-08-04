@@ -67,4 +67,8 @@ export class StoreService {
   getFinishedExercises(): Observable<Exercise[]> {
     return this.store.select(fromTraining.getFinishedExercises);
   }
+
+  getActiveTraining(): Observable<Exercise> {
+    return this.store.select(fromTraining.getActiveTraining);
+  }
 }

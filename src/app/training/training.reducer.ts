@@ -43,6 +43,7 @@ export function trainingReducer(
       const training: Exercise = state.availableExercises.find(
         (exercise: Exercise) => exercise.id === action.payload
       );
+
       return {
         ...state,
         activeTraining: { ...training }

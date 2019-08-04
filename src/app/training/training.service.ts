@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 import { Exercise } from './exercise.model';
 import { UIService } from './../shared/ui.service';
@@ -12,7 +12,6 @@ import { StoreService } from '../store/index';
   providedIn: 'root'
 })
 export class TrainingService {
-  private runningExercise: Exercise;
   private fbSubs: Subscription[] = [];
 
   constructor(
@@ -54,32 +53,38 @@ export class TrainingService {
     );
   }
 
-  getRunningExercise(): Exercise {
-    return { ...this.runningExercise };
-  }
-
   startExercise(exerciseId: string): void {
     this.storeService.dispatchStartTraining(exerciseId);
   }
 
   completeExercixe(): void {
-    this.addDatatoDatabase({
-      ...this.runningExercise,
-      date: new Date(),
-      state: 'completed'
-    });
-    this.storeService.dispatchStopTraining();
+    this.storeService
+      .getActiveTraining()
+      .pipe(take(1))
+      .subscribe((exercise: Exercise) => {
+        this.addDatatoDatabase({
+          ...exercise,
+          date: new Date(),
+          state: 'completed'
+        });
+        this.storeService.dispatchStopTraining();
+      });
   }
 
   cancelExercixe(progress: number): void {
-    this.addDatatoDatabase({
-      ...this.runningExercise,
-      duration: (this.runningExercise.duration * progress) / 100,
-      calories: (this.runningExercise.calories * progress) / 100,
-      date: new Date(),
-      state: 'cancelled'
-    });
-    this.storeService.dispatchStopTraining();
+    this.storeService
+      .getActiveTraining()
+      .pipe(take(1))
+      .subscribe((exercise: Exercise) => {
+        this.addDatatoDatabase({
+          ...exercise,
+          duration: (exercise.duration * progress) / 100,
+          calories: (exercise.calories * progress) / 100,
+          date: new Date(),
+          state: 'cancelled'
+        });
+        this.storeService.dispatchStopTraining();
+      });
   }
 
   fetchCompletedAndCancelledExercises(): void {
