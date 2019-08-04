@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
@@ -28,6 +28,7 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
     'state'
   ];
   dataSource: MatTableDataSource<Exercise> = new MatTableDataSource<Exercise>();
+  pageEvent: PageEvent;
 
   @ViewChild(MatSort, null) sort: MatSort;
   @ViewChild(MatPaginator, null) paginator: MatPaginator;

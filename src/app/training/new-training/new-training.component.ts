@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
@@ -35,7 +35,7 @@ export class NewTrainingComponent implements OnInit {
     this.trainingService.fetchAvailableExercises();
   }
 
-  onStartTraining(form: NgModel): void {
+  onStartTraining(form: NgForm): void {
     this.trainingService.startExercise(form.value.exercise);
   }
 }
