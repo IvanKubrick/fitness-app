@@ -4,8 +4,8 @@ import {
   createSelector
 } from '@ngrx/store';
 
-import * as fromUi from '../shared/index';
-import * as fromAuth from '../auth/index';
+import * as fromUi from '../shared/ui.reducer';
+import * as fromAuth from '../auth/auth.reducer';
 
 export interface State {
   ui: fromUi.State;

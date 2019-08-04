@@ -1,15 +1,15 @@
 import {
   Component,
-  OnInit,
   Output,
   EventEmitter,
-  OnDestroy,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  OnInit
 } from '@angular/core';
 
-import { AuthService } from './../../auth/auth.service';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
+
+import { AuthService } from './../../auth/index';
+import { StoreService } from './../../store/index';
 
 @Component({
   selector: 'app-header',
@@ -17,26 +17,18 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent implements OnInit, OnDestroy {
-  isAuth: boolean = false;
+export class HeaderComponent implements OnInit {
+  isAuthenticated$: Observable<boolean>;
 
   @Output() sidenavToggle: EventEmitter<void> = new EventEmitter();
 
-  private authSubscription: Subscription;
-
   constructor(
     private authService: AuthService,
-    private changeDetectorRef: ChangeDetectorRef
+    private storeService: StoreService
   ) {}
 
   ngOnInit(): void {
-    this.subscribeToAuthChange();
-  }
-
-  ngOnDestroy(): void {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    this.isAuthenticated$ = this.storeService.getIsAuthenticated();
   }
 
   onToggleSidenav(): void {
@@ -45,14 +37,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   onLogout(): void {
     this.authService.logout();
-  }
-
-  private subscribeToAuthChange(): void {
-    this.authSubscription = this.authService.authChange.subscribe(
-      (authenticated: boolean) => {
-        this.isAuth = authenticated;
-        this.changeDetectorRef.markForCheck();
-      }
-    );
   }
 }

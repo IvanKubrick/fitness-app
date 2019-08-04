@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { WelcomeComponent } from './welcome/welcome.component';
-import { AuthGuard } from './auth/auth.guad';
+import { AuthGuard } from './auth/auth.guard';
 import { TrainingModule } from './training/training.module';
 
 const routes: Routes = [

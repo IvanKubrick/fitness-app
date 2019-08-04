@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 
-import { Subject } from 'rxjs';
-
 import { AuthData } from './auth-data';
 import { UIService } from '../shared/index';
 import { StoreService } from './../store/index';
@@ -13,9 +11,6 @@ import { TrainingService } from './../training/training.service';
   providedIn: 'root'
 })
 export class AuthService {
-  authChange: Subject<boolean> = new Subject<boolean>();
-  private isAuthenticated: boolean = false;
-
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
@@ -27,13 +22,11 @@ export class AuthService {
   initAuthListeners(): void {
     this.afAuth.authState.subscribe((user: any) => {
       if (user) {
-        this.isAuthenticated = true;
-        this.authChange.next(true);
+        this.storeService.dispatchAuthenticate();
         this.router.navigate(['/training']);
       } else {
-        this.isAuthenticated = false;
         this.trainingService.cancelSubscriptions();
-        this.authChange.next(false);
+        this.storeService.dispatchUnauthenticate();
         this.router.navigate(['/login']);
       }
     });
@@ -67,9 +60,5 @@ export class AuthService {
 
   logout(): void {
     this.afAuth.auth.signOut();
-  }
-
-  isAuth(): boolean {
-    return this.isAuthenticated;
   }
 }

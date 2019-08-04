@@ -3,14 +3,13 @@ import {
   OnInit,
   EventEmitter,
   Output,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectionStrategy
 } from '@angular/core';
 
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { AuthService } from './../../auth/auth.service';
+import { AuthService } from './../../auth/index';
+import { StoreService } from './../../store/index';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -18,26 +17,18 @@ import { AuthService } from './../../auth/auth.service';
   styleUrls: ['./sidenav-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidenavListComponent implements OnInit, OnDestroy {
-  isAuth: boolean = false;
+export class SidenavListComponent implements OnInit {
+  isAuthenticated: Observable<boolean>;
 
   @Output() closeSidenav: EventEmitter<void> = new EventEmitter();
 
-  private authSubscription: Subscription;
-
   constructor(
     private authService: AuthService,
-    private changeDetectorRef: ChangeDetectorRef
+    private storeService: StoreService
   ) {}
 
   ngOnInit(): void {
-    this.subscribeToAuthChange();
-  }
-
-  ngOnDestroy(): void {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    this.isAuthenticated = this.storeService.getIsAuthenticated();
   }
 
   onLinkClick(): void {
@@ -47,14 +38,5 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   onLogout(): void {
     this.closeSidenav.emit();
     this.authService.logout();
-  }
-
-  private subscribeToAuthChange(): void {
-    this.authSubscription = this.authService.authChange.subscribe(
-      (authenticated: boolean) => {
-        this.isAuth = authenticated;
-        this.changeDetectorRef.markForCheck();
-      }
-    );
   }
 }
