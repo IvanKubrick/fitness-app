@@ -9,9 +9,9 @@ import { AuthService } from './auth/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
+  constructor(private authService: AuthService) {}
+
   ngOnInit(): void {
     this.authService.initAuthListeners();
   }
-
-  constructor(private authService: AuthService) {}
 }
