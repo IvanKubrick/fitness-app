@@ -1,17 +1,12 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
-import { UIService } from './../../shared/ui.service';
+import { StoreService } from './../../store/index';
+import { startWith, tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-training',
@@ -19,39 +14,19 @@ import { UIService } from './../../shared/ui.service';
   styleUrls: ['./new-training.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewTrainingComponent implements OnInit, OnDestroy {
-  exercises: Exercise[];
-  isLoading: boolean = true;
-
-  private subscription: Subscription;
+export class NewTrainingComponent implements OnInit {
+  exercises$: Observable<Exercise[]>;
+  isLoading$: Observable<boolean>;
 
   constructor(
     private trainingService: TrainingService,
-    private uiService: UIService,
-    private changeDetectorRef: ChangeDetectorRef
+    private storeService: StoreService
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.trainingService.exercisesChanged.subscribe(
-      (exercises: Exercise[]) => {
-        this.exercises = exercises;
-      }
-    );
-
-    this.subscription.add(
-      this.uiService.loadingStateChanged.subscribe((value: boolean) => {
-        this.isLoading = value;
-        this.changeDetectorRef.markForCheck();
-      })
-    );
-
+    this.isLoading$ = this.storeService.getIsLoading();
+    this.exercises$ = this.storeService.getAvailableExercises();
     this.fetchExercises();
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
   }
 
   fetchExercises(): void {

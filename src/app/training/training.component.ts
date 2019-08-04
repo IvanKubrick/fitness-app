@@ -1,13 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { Subscription } from 'rxjs';
-import { TrainingService } from './training.service';
-import { Exercise } from './exercise.model';
+import { Observable } from 'rxjs';
+import { StoreService } from '../store/index';
 
 @Component({
   selector: 'app-training',
@@ -16,32 +10,11 @@ import { Exercise } from './exercise.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainingComponent implements OnInit {
-  ongoingTraining: boolean;
+  ongoingTraining$: Observable<boolean>;
 
-  exerciseSubscription: Subscription;
-
-  constructor(
-    private trainingService: TrainingService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  constructor(private storeService: StoreService) {}
 
   ngOnInit(): void {
-    this.ongoingTraining = false;
-
-    this.subscribeToTrainingChange();
-  }
-  ngDestroy(): void {
-    if (this.exerciseSubscription) {
-      this.exerciseSubscription.unsubscribe();
-    }
-  }
-
-  private subscribeToTrainingChange(): void {
-    this.exerciseSubscription = this.trainingService.exerciseChanged.subscribe(
-      (exercise: Exercise) => {
-        this.ongoingTraining = !!exercise;
-        this.changeDetectorRef.markForCheck();
-      }
-    );
+    this.ongoingTraining$ = this.storeService.getIsTraining();
   }
 }
