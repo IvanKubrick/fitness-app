@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 import { AuthService } from './../../auth/index';
 import { StoreService } from './../../store/index';
@@ -28,7 +29,9 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isAuthenticated$ = this.storeService.getIsAuthenticated();
+    this.isAuthenticated$ = this.storeService
+      .getIsAuthenticated()
+      .pipe(shareReplay());
   }
 
   onToggleSidenav(): void {

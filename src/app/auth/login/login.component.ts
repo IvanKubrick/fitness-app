@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
 import { StoreService } from './../../store/index';
@@ -24,7 +25,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
-    this.isLoading$ = this.storeService.getIsLoading();
+    this.isLoading$ = this.storeService.getIsLoading().pipe(shareReplay());
   }
 
   hasControlError(controlName: string, errorName: string): boolean {

@@ -2,11 +2,11 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
 import { StoreService } from './../../store/index';
-import { startWith, tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-training',
@@ -24,8 +24,10 @@ export class NewTrainingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isLoading$ = this.storeService.getIsLoading();
-    this.exercises$ = this.storeService.getAvailableExercises();
+    this.isLoading$ = this.storeService.getIsLoading().pipe(shareReplay());
+    this.exercises$ = this.storeService
+      .getAvailableExercises()
+      .pipe(shareReplay());
     this.fetchExercises();
   }
 

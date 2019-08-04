@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
+
 import { StoreService } from '../store/index';
 
 @Component({
@@ -15,6 +17,8 @@ export class TrainingComponent implements OnInit {
   constructor(private storeService: StoreService) {}
 
   ngOnInit(): void {
-    this.ongoingTraining$ = this.storeService.getIsTraining();
+    this.ongoingTraining$ = this.storeService
+      .getIsTraining()
+      .pipe(shareReplay());
   }
 }

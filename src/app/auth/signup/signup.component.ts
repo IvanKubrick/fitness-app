@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DateTime } from 'luxon';
 
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
 import { StoreService } from './../../store/index';
@@ -26,7 +27,7 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
-    this.isLoading$ = this.storeService.getIsLoading();
+    this.isLoading$ = this.storeService.getIsLoading().pipe(shareReplay());
   }
 
   hasControlError(controlName: string, errorName: string): boolean {

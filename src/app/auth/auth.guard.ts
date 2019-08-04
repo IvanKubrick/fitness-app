@@ -15,15 +15,12 @@ import { StoreService } from '../store/index';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanLoad {
-  constructor(private storeService: StoreService, private router: Router) {}
+  constructor(private storeService: StoreService) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> {
+  canActivate(): Observable<boolean> {
     return this.storeService.getIsAuthenticated().pipe(take(1));
   }
-  canLoad(route: Route): Observable<boolean> {
+  canLoad(): Observable<boolean> {
     return this.storeService.getIsAuthenticated().pipe(take(1));
   }
 }
