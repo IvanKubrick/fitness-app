@@ -40,11 +40,11 @@ export class PastTrainingsComponent
   constructor(private trainingService: TrainingService) {}
 
   ngOnInit(): void {
-    this.subscription = this.trainingService.finishedExercisesChanged.subscribe(
-      (exercises: Exercise[]) => {
-        this.dataSource.data = exercises;
-      }
-    );
+    // this.subscription = this.trainingService.finishedExercisesChanged.subscribe(
+    //   (exercises: Exercise[]) => {
+    //     this.dataSource.data = exercises;
+    //   }
+    // );
 
     this.trainingService.fetchCompletedAndCancelledExercises();
   }
